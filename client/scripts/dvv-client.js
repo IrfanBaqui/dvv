@@ -62,13 +62,16 @@ var clientRdy = function(btn){
 
 
 var dvvClientStart = function(){
+
   connectedClients = 0;
   socket = io.connect();
   //Predefined function just returns the element
   func = 'element';
+  var startTimes = {};
 
   //Upon receiving data, process it
   socket.on('data', function(data) {
+    console.log('data:', data);
 
     ON_DATA(data);
 
@@ -79,14 +82,21 @@ var dvvClientStart = function(){
     
     //Spawn a new webworker
     var worker = new Worker('scripts/workerTask.js');
+    // console.log('starttime: ', new Date().getTime());
+    // var start = new Date().getTime();
+    startTimes[data.id] = new Date().getTime();
 
     //Have our slave process listen to when web worker finishes computation
     worker.addEventListener('message', function(e) {
-      console.log ("Worker has finished computing");
+
+      //computing process time for successful message
+      console.log('eclient:',e);
+      console.log ("Worker has finished computing", new Date().getTime());
       //Send the results if successful
       socket.emit('completed', {
         "id": data.id,
-        "result": e.data
+        "result": e.data,
+        "processTime": e.timeStamp - startTimes[data.id]
       });
       //Kill the worker
       worker.terminate();
@@ -94,6 +104,9 @@ var dvvClientStart = function(){
 
     //Have our slave process listen to errors from web worker
     worker.addEventListener('error', function(e){
+      //computing process time for errors
+      // times[data.id]['stop'] = new Date().getTime();
+      // times[data.id]['success'] = false;
       console.log("Worker has encountered an error with computation");
       //Send an error message back to master process
       socket.emit('completed', {
@@ -120,6 +133,7 @@ var dvvClientStart = function(){
   });
 
   socket.on('complete', function(data){
+
     ON_RESULTS(data.results);
   });
 

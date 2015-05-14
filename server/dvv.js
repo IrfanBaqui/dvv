@@ -34,8 +34,8 @@ var DATA = [1, 2, 3];
 var PARTITION_LENGTH = 1;
 
 //Callback to be made on complete of entire distributed task
-var CALLBACK = function(results){ console.log(results); return results; };
-
+// var CALLBACK = function(results){ console.log(results); return results; };
+var CALLBACK = function(results){ console.log('results'); return results; };
 //Set a timer to measure the duration of entire distributed task
 //For testing purposes
 var CLOCK = false;
@@ -155,6 +155,7 @@ dvv.start = function(){
     console.log('New Connection');
     availableClients.push(socket);
 
+
     //Notify everyone a new client has been added
     io.emit('clientChange', { 
       availableClients : availableClients.length 
@@ -170,7 +171,7 @@ dvv.start = function(){
     //When client has returned data, check validity and send 
     //another packet if necessary
     socket.on('completed', function(data){
-
+      console.log('finishedData:',data.processTime);
       //If the computation was completed successfully 
       //and it was delivered back in a timely fashion,
       //add it to the completed packets heap/ remove from pending packets
