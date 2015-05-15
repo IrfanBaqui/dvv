@@ -94,9 +94,9 @@ dvv.start = function(){
   testRuns.functionName = FUNC_NAME;
   //time for overall
   testRuns.clientTimes = []; //done
-  testRuns.workerTimes = []; 
-  testRuns.errors = 0;
-  testRuns.errorTimes = 0;
+  testRuns.workerTimes = []; //done
+  testRuns.errors = 0;  //done
+  testRuns.errorTimes = 0;  //done
 
 
   var startTimes = {};
@@ -189,7 +189,12 @@ dvv.start = function(){
       //and it was delivered back in a timely fashion,
       //add it to the completed packets heap/ remove from pending packets
       //**NOTE: this implies late packages will be chucked aside
-      if (data.id !== -1 && pendingPackets[data.id]){
+      if (data.id === -1) {
+        //receive an error
+        testRuns.errors++;
+        testRuns.errorTimes += data.processTime;
+      } else if (pendingPackets[data.id]){
+        testRuns.workerTimes.push(data.processTime);
         delete pendingPackets[data.id];
         completedPackets.insert(data);
         
@@ -199,7 +204,7 @@ dvv.start = function(){
       }
 
       if (completedPackets.size() === partitionedData.length){
-        console.log("Computation Complete");
+        console.log("Computation Complete"); 
         var endTime = new Date().getTime();
         if(clock){
           console.timeEnd('timer');
@@ -208,7 +213,6 @@ dvv.start = function(){
 
         //Integration of all the resulting data using heapsort
         while(completedPackets.size() > 0){
-
           finishedResults.push(completedPackets.getMin().result);
         }
 
@@ -219,6 +223,9 @@ dvv.start = function(){
         }
 
         // console.log('testRuns.clientTimes:',testRuns.clientTimes);
+        console.log('testRuns.errors',testRuns.errors);
+        console.log('testRuns.errorTimes',testRuns.errorTimes);
+        console.log('testRuns.workerTimes',testRuns.workerTimes);
 
         io.emit('complete',  { 
           results : results 
@@ -231,7 +238,7 @@ dvv.start = function(){
 
     socket.on('disconnect', function(){
       testRuns.clientTimes.push(new Date().getTime() - startTimes[socket.id]);
-      startTimes[socket.id].delete();
+      delete startTimes[socket.id];
       //Remove socket from the list of available clients
       availableClients.splice(availableClients.indexOf(socket), 1);
 
