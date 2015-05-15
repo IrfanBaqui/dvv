@@ -61,6 +61,7 @@ dvv.config = function(params){
 
   if('func' in params){
     FUNC = '(' + params.func + ').apply(this, element)';
+    FUNC_NAME = params.func;
   }
 
   if('data' in params){
@@ -88,7 +89,18 @@ dvv.start = function(){
   //Create the socket.io instance attached to the express instance
   io = require('socket.io')(server);
   var port = process.env.PORT || 8000;
-  
+  var testRuns = {};
+  testRuns.testName = ''; //set to random string or benchmark
+  testRuns.functionName = FUNC_NAME;
+  //time for overall
+  testRuns.clientTimes = []; //done
+  testRuns.workerTimes = []; 
+  testRuns.errors = 0;
+  testRuns.errorTimes = 0;
+
+
+  var startTimes = {};
+
   //Start the server
   server.listen(port, function() {
     console.log('Server listening on port ' + port);
@@ -147,12 +159,13 @@ dvv.start = function(){
   initializeProcess(partitionedData);
   
   io.of('/').on('connection', function(socket){
+    startTimes[socket.id] = new Date().getTime();
     //This kicks off timer for internal testing purposes
     if(clock){
       console.time('timer');
     }
 
-    console.log('New Connection');
+    console.log('New Connection:',socket);
     availableClients.push(socket);
 
 
@@ -171,7 +184,7 @@ dvv.start = function(){
     //When client has returned data, check validity and send 
     //another packet if necessary
     socket.on('completed', function(data){
-      console.log('finishedData:',data.processTime);
+      // console.log('finishedData:',data.processTime);
       //If the computation was completed successfully 
       //and it was delivered back in a timely fashion,
       //add it to the completed packets heap/ remove from pending packets
@@ -187,7 +200,7 @@ dvv.start = function(){
 
       if (completedPackets.size() === partitionedData.length){
         console.log("Computation Complete");
-
+        var endTime = new Date().getTime();
         if(clock){
           console.timeEnd('timer');
         }
@@ -195,12 +208,18 @@ dvv.start = function(){
 
         //Integration of all the resulting data using heapsort
         while(completedPackets.size() > 0){
+
           finishedResults.push(completedPackets.getMin().result);
         }
 
         //Set callback funcrion using dvv.config to perform operations on the finished results
         var results =  callback(finishedResults);
-        
+        for(sockets in startTimes){
+          testRuns.clientTimes.push(endTime - startTimes[sockets]);
+        }
+
+        // console.log('testRuns.clientTimes:',testRuns.clientTimes);
+
         io.emit('complete',  { 
           results : results 
         });
@@ -211,7 +230,8 @@ dvv.start = function(){
     });
 
     socket.on('disconnect', function(){
-
+      testRuns.clientTimes.push(new Date().getTime() - startTimes[socket.id]);
+      startTimes[socket.id].delete();
       //Remove socket from the list of available clients
       availableClients.splice(availableClients.indexOf(socket), 1);
 
