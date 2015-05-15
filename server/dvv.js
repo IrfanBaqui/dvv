@@ -49,33 +49,25 @@ dvv.config = function(params){
   if('staticPath' in params){
     STATIC_PATH = params.staticPath;
   }
-
   if('routesPath' in params){
     ROUTES_PATH = params.routesPath;
   }
-
-  
   if('timeout' in params){
     TIMEOUT_INTERVAL = params.timeout;
   }
-
   if('func' in params){
     FUNC = '(' + params.func + ').apply(this, element)';
     FUNC_NAME = params.func;
   }
-
   if('data' in params){
     DATA = params.data;
   }
-
   if('partitionLength' in params){
     PARTITION_LENGTH = params.partitionLength;
   }
-
   if('callback' in params){
     CALLBACK = params.callback;
   }
-
   if('clock' in params){
     CLOCK = params.clock;
   }
@@ -89,17 +81,18 @@ dvv.start = function(){
   //Create the socket.io instance attached to the express instance
   io = require('socket.io')(server);
   var port = process.env.PORT || 8000;
+
+  // stores the statistics for a test run
   var testRuns = {};
   testRuns.testName = ''; //set to random string or benchmark
   testRuns.functionName = FUNC_NAME;
-  //time for overall
-  testRuns.clientTimes = []; //done
-  testRuns.workerTimes = []; //done
-  testRuns.errors = 0;  //done
-  testRuns.errorTimes = 0;  //done
+  testRuns.clientTimes = [];
+  testRuns.workerTimes = [];
+  testRuns.errors = 0;
+  testRuns.errorTimes = 0;
 
-
-  var startTimes = {};
+  var socketStartTimes = {};
+  var startTime;
 
   //Start the server
   server.listen(port, function() {
@@ -159,7 +152,13 @@ dvv.start = function(){
   initializeProcess(partitionedData);
   
   io.of('/').on('connection', function(socket){
-    startTimes[socket.id] = new Date().getTime();
+    if (Object.keys(socketStartTimes).length === 0) {
+      var startTime = new Date().getTime();
+      socketStartTimes[socket.id] = startTime;
+    } else {
+      socketStartTimes[socket.id] = new Date().getTime();
+    }
+ 
     //This kicks off timer for internal testing purposes
     if(clock){
       console.time('timer');
@@ -206,8 +205,9 @@ dvv.start = function(){
       if (completedPackets.size() === partitionedData.length){
         console.log("Computation Complete"); 
         var endTime = new Date().getTime();
+        testRuns['overallTime'] = endTime - startTime;
         if(clock){
-          console.timeEnd('timer');
+          console.log('Overall time for completion: ', testRuns.overallTime);
         }
         var finishedResults = [];
 
@@ -218,8 +218,8 @@ dvv.start = function(){
 
         //Set callback funcrion using dvv.config to perform operations on the finished results
         var results =  callback(finishedResults);
-        for(sockets in startTimes){
-          testRuns.clientTimes.push(endTime - startTimes[sockets]);
+        for(sockets in socketStartTimes){
+          testRuns.clientTimes.push(endTime - socketStartTimes[sockets]);
         }
 
         // console.log('testRuns.clientTimes:',testRuns.clientTimes);
@@ -228,7 +228,8 @@ dvv.start = function(){
         console.log('testRuns.workerTimes',testRuns.workerTimes);
 
         io.emit('complete',  { 
-          results : results 
+          'results': results,
+          'stats': testRuns
         });
 
       } else {
@@ -237,8 +238,8 @@ dvv.start = function(){
     });
 
     socket.on('disconnect', function(){
-      testRuns.clientTimes.push(new Date().getTime() - startTimes[socket.id]);
-      delete startTimes[socket.id];
+      testRuns.clientTimes.push(new Date().getTime() - socketStartTimes[socket.id]);
+      delete socketStartTimes[socket.id];
       //Remove socket from the list of available clients
       availableClients.splice(availableClients.indexOf(socket), 1);
 
