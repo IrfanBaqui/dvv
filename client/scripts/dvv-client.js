@@ -111,7 +111,8 @@ var dvvClientStart = function(){
       //Send an error message back to master process
       socket.emit('completed', {
         "id": -1,
-        "result": null
+        "result": null,
+        "processTime": e.timeStamp - startTimes[data.id]
       });
       worker.terminate();
     }, false);
