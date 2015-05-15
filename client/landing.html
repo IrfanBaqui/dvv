@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>
   DVV Benchmarking
   </title>
     <!-- http://getbootstrap.com/customize/?id=fd748f2ea1b96dc42d76  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
     <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
@@ -13,8 +15,9 @@
 
 <body>
 	
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
+  <nav class="navbar navbar-fixed-top">
+    <div class="container-fluid navbar-inner">
+      <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand logo" href="#"><img src="./img/dvv@2x.png" class="img-responsive"></a>
       </div>
@@ -27,6 +30,7 @@
           <li><a href="#">Contact</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
+      </div>
     </div><!-- /.container-fluid -->
   </nav>
 
@@ -34,7 +38,7 @@
 
   <div class="jumbotron main">
 
-    <h2 align="center">DISCREET COMPUTING BENCHMARKS</h2>
+    <h2 align="center" style="margin-top: 5%;">DISCREET COMPUTING BENCHMARKS</h2>
     <h3 align="center" class="subheader" style="">using Socket.IO and Web Workers</h3>
 
     <div class="container">
@@ -53,45 +57,49 @@
     </div>
     </div>
 
-      <div align="center" class="container img-arrow">
-      <a href="#"><img src="./img/arrow@2x.png" class="img-responsive img-arrow"></a>
+      <div align="center" id="button" class="container img-arrow">
+      <a class="scroll" href="#destination1"><img src="./img/arrow@2x.png" class="img-responsive img-arrow"></a>
       </div>
   </div>
 
   <!-- END JUMBOTRON -->
 
   <!-- START SECOND VIEW -->
-
-  <div class="container subview">
-    <div class="container">
-      <div align="center" class="view-header">
-        <h1 align="center">Select an algorithm to benchmark</h1>
+  <div id="destination1">
+    <div class="container subview">
+      <div class="container">
+        <div align="center" class="view-header">
+          <h1 align="center">Select an algorithm to benchmark</h1>
+        </div>
       </div>
-    </div>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <a href="#">
-            <div class="column-box">
-              <h3 class="content">Loom Algorithm</h3>
-            </div>
-          </a>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <a href="#">
+              <div class="column-box">
+                <h3 class="content">n<br>Queens</h3>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a href="#">
+              <div class="column-box">
+                <h3 class="content">Monte Carlo</h3>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a href="#">
+              <div class="column-box">
+                <h3 class="content">Doom Algorithm</h3>
+              </div>
+            </a>
+          </div>
         </div>
-        <div class="col-md-4">
-          <a href="#">
-            <div class="column-box">
-              <h3 class="content">Boom Algorithm</h3>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a href="#">
-            <div class="column-box">
-              <h3 class="content">Doom Algorithm</h3>
-            </div>
-          </a>
-        </div>
+      </div>
+      <div align="center" id="button" class="container img-arrow" style="margin-top:10%;">
+        <a class="scroll" href="#destination2"><img src="./img/arrow@2x.png" class="img-responsive img-arrow"></a>
       </div>
     </div>
   </div>
@@ -101,42 +109,53 @@
   <hr>
 
   <!-- START THIRD VIEW -->
-
-  <div class="container subview">
-    <div class="container">
-      <div align="center" class=".view-header">
-        <h2 align="center">Meet the founders</h2>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <a href="#">
-            <div class="column-box">
-              <h3 class="content">Loom Algorithm</h3>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a href="#">
-            <div class="column-box">
-              <h3 class="content">Boom Algorithm</h3>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a href="#">
-            <div class="column-box">
-              <h3 class="content">Doom Algorithm</h3>
-            </div>
-          </a>
+  <div id="destination2">
+    <div class="container subview">
+      <div class="container">
+        <div align="center" class=".view-header">
+          <h2 align="center">Legacy Project By</h2>
         </div>
       </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <a href="#">
+              <div class="column-box">
+                <a class="scroll" href="#destination2"><img src="./img/irfan.png" class="img-responsive img-arrow" style="width:50%; height:auto;"></a>
+                <h3 class="content">Irfan Baqui</h3>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-3">
+            <a href="#">
+              <div class="column-box">
+                <a class="scroll" href="#destination2"><img src="./img/derek.png" class="img-responsive img-arrow" style="width:50%; height:auto;"></a>
+                <h3 class="content">Dave Grundfest</h3>
+              </div>
+            </a>
+          </div><div class="col-md-3">
+            <a href="#">
+              <div class="column-box">
+                <a class="scroll" href="#destination2"><img src="./img/derek.png" class="img-responsive img-arrow" style="width:50%; height:auto;"></a>
+                <h3 class="content">Derek Sakamoto</h3>
+              </div>
+            </a>
+          </div><div class="col-md-3">
+            <a href="#">
+              <div class="column-box">
+                <a class="scroll" href="#destination2"><img src="./img/lu.png" class="img-responsive img-arrow" style="width:50%; height:auto;"></a>
+                <h3 class="content">Lu<br>Yin</h3>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  <div>
 
   <!-- END THIRD VIEW -->
+  <hr>
   
   <!-- START FOOTER -->
 
@@ -145,7 +164,22 @@
   </div>
 
   <!-- END FOOTER -->
-
+<script>
+  $(document).ready(function() {
+    $(".scroll").click(function(event){
+             event.preventDefault();
+             //calculate destination place
+             var dest=0;
+             if($(this.hash).offset().top > $(document).height()-$(window).height()){
+                  dest=$(document).height()-$(window).height();
+             }else{
+                  dest=$(this.hash).offset().top;
+             }
+             //go to destination
+             $('html,body').animate({scrollTop:dest}, 1000,'swing');
+    });
+  });
+</script>
 
 
 </body>

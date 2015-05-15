@@ -6,6 +6,9 @@ body {
 
 .navbar {
   margin:0px;
+  background:#fff; 
+  border-bottom:none thin #323A45; 
+  border-bottom-style:solid;
 }
 
 .logo {
@@ -75,7 +78,7 @@ body {
 }
 
 .subview .container {
-  margin-top: 2%;
+  margin-top: 5%;
 }
 
 .subview .container .row {
