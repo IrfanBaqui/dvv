@@ -1,0 +1,117 @@
+body {
+	font-family: 'Asap', sans-serif; 
+	height:100%; 
+	width:100%;
+}
+
+.navbar {
+  margin:0px;
+}
+
+.logo {
+  padding:0px; 
+  padding-top:5px; 
+  padding-left:100px;
+}
+
+.logo img {
+  width:50%;
+  height: auto;
+}
+
+.main {
+  height:668px; 
+  color:#fff;
+}
+
+.subheader {
+  color:grey;
+}
+
+.steps-row {
+  margin-top:5%;
+}
+
+.steps-img-left {
+  margin:45px auto; 
+  width:50%; 
+  height:auto;
+}
+
+.steps-img-right {
+  margin:25px auto; 
+  width:50%; 
+  height:auto;
+}
+
+.steps-img-middle {
+  margin:0px auto; 
+  width:50%; 
+  height:auto;
+}
+
+.text-steps-row {
+  margin-top:0%;
+}
+
+.text-steps-row h3 {
+  text-align:center;
+}
+
+.img-arrow {
+  margin:0px auto; 
+  width:30%; 
+  height:auto;
+  margin-top:7%;
+}
+
+.subview {
+  height:670px;
+}
+
+.subview .view-header {
+  margin-top:4%; 
+  color:grey;
+}
+
+.subview .container {
+  margin-top: 2%;
+}
+
+.subview .container .row {
+  margin-top:2%;
+}
+
+.subview .container .row .column-box .content {
+  text-align:center; 
+  margin:30%;
+}
+
+.subview .column-box {
+  border:1px grey solid; 
+  border-radius:10%; 
+  margin:5%;
+}
+
+#footer {
+  background:#323A45; 
+  margin-top:10%; 
+  height:2%;
+}
+
+#footer .content {
+  text-align:center; 
+  color:#fff; 
+  margin:0.2% auto; 
+  padding:0.5%;
+}
+
+#footer .content span {
+ color:red; 
+}
+
+
+
+
+
+
